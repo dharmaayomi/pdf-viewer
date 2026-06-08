@@ -1,0 +1,2480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Annotator Pro</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheet -->
+  <style>
+    :root {
+      /* Light Theme (Slate & Indigo Accent) */
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-workspace: #f1f5f9;
+      --border-color: #cbd5e1;
+      --border-color-light: #e2e8f0;
+      
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      
+      --accent: #4f46e5;
+      --accent-hover: #4338ca;
+      --accent-light: #e0e7ff;
+      --accent-glow: rgba(79, 70, 229, 0.15);
+      
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      
+      --scrollbar-thumb: #cbd5e1;
+      --scrollbar-thumb-hover: #94a3b8;
+    }
+
+    .dark-theme {
+      /* Dark Theme (Deep Navy & Neon Purple/Indigo Accent) */
+      --bg-primary: #0b0f19;
+      --bg-secondary: #111827;
+      --bg-workspace: #030712;
+      --border-color: #374151;
+      --border-color-light: #1f2937;
+      
+      --text-primary: #f9fafb;
+      --text-secondary: #d1d5db;
+      --text-muted: #9ca3af;
+      
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --accent-light: rgba(99, 102, 241, 0.15);
+      --accent-glow: rgba(99, 102, 241, 0.3);
+      
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.6), 0 4px 6px -4px rgb(0 0 0 / 0.6);
+      
+      --scrollbar-thumb: #374151;
+      --scrollbar-thumb-hover: #4b5563;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-thumb) transparent;
+    }
+
+    /* Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--scrollbar-thumb-hover);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Header Panel */
+    header {
+      height: 64px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent) 0%, #a855f7 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .brand-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      background: linear-gradient(to right, var(--text-primary), var(--text-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background: var(--border-color-light);
+      border-color: var(--text-muted);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      box-shadow: 0 2px 4px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+      box-shadow: 0 4px 8px var(--accent-glow);
+    }
+
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border-radius: 6px;
+    }
+
+    /* Navigation / Zoom Controls in Header */
+    .viewport-controls {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      padding: 4px 8px;
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .control-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border-color);
+    }
+
+    .page-nav-input {
+      width: 45px;
+      text-align: center;
+      padding: 4px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .page-nav-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-glow);
+    }
+
+    .page-count-text {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .zoom-select {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .zoom-select:focus {
+      border-color: var(--accent);
+    }
+
+    /* Sub-Toolbar (Annotation Controls) */
+    .annotation-toolbar {
+      height: 52px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 0 20px;
+      z-index: 90;
+      box-shadow: var(--shadow-sm);
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .tool-btn {
+      width: 36px;
+      height: 36px;
+      border: 1px solid transparent;
+      background: transparent;
+      border-radius: 6px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .tool-btn:hover {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+    }
+
+    .tool-btn.active {
+      background: var(--accent-light);
+      color: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 2px 4px var(--accent-glow);
+    }
+
+    .tool-btn-divider {
+      width: 1px;
+      height: 24px;
+      background: var(--border-color-light);
+    }
+
+    /* Style Panel (Sliders & Colors) */
+    .style-panel {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding-left: 12px;
+      border-left: 1px solid var(--border-color-light);
+    }
+
+    .color-swatches {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .swatch {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--bg-secondary);
+      box-shadow: 0 0 0 1px var(--border-color);
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+
+    .swatch:hover {
+      transform: scale(1.15);
+    }
+
+    .swatch.active {
+      box-shadow: 0 0 0 2px var(--accent);
+      transform: scale(1.1);
+    }
+
+    .custom-color-picker-wrapper {
+      position: relative;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid var(--bg-secondary);
+      box-shadow: 0 0 0 1px var(--border-color);
+      cursor: pointer;
+    }
+
+    .custom-color-picker {
+      position: absolute;
+      top: -4px;
+      left: -4px;
+      width: 30px;
+      height: 30px;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .style-slider {
+      width: 80px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    /* Main Workspace Layout */
+    .main-workspace {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Sidebar Panel */
+    .sidebar {
+      width: 280px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, margin-left 0.3s ease, background-color 0.3s, border-color 0.3s;
+      z-index: 80;
+    }
+
+    .sidebar.collapsed {
+      margin-left: -280px;
+    }
+
+    .sidebar-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border-color-light);
+    }
+
+    .sidebar-tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 12px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .sidebar-tab-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .sidebar-tab-btn.active {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .sidebar-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .sidebar-section {
+      display: none;
+    }
+
+    .sidebar-section.active {
+      display: block;
+    }
+
+    /* Document Info Card */
+    .info-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color-light);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 0.8rem;
+    }
+
+    .info-label {
+      color: var(--text-muted);
+    }
+
+    .info-value {
+      font-weight: 500;
+      color: var(--text-primary);
+      word-break: break-all;
+      max-width: 140px;
+      text-align: right;
+    }
+
+    /* Thumbnails Section */
+    .thumbnails-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .thumbnail-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      padding: 8px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .thumbnail-card:hover {
+      background: var(--bg-primary);
+      border-color: var(--border-color);
+    }
+
+    .thumbnail-card.active {
+      background: var(--accent-light);
+      border-color: var(--accent);
+    }
+
+    .thumbnail-canvas {
+      background: white;
+      box-shadow: var(--shadow);
+      border-radius: 4px;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .thumbnail-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    /* Annotations List Section */
+    .annotations-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .annotation-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color-light);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .annotation-item:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .ann-item-icon {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .ann-item-icon.text-icon {
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+    }
+
+    .ann-item-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .ann-item-title {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .ann-item-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .ann-item-delete-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: all 0.2s;
+    }
+
+    .annotation-item:hover .ann-item-delete-btn {
+      opacity: 1;
+    }
+
+    .ann-item-delete-btn:hover {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.08);
+    }
+
+    .no-annotations {
+      text-align: center;
+      padding: 30px 10px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .no-annotations i {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Viewer Container */
+    .viewer-container {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: auto;
+      background: var(--bg-workspace);
+      padding: 32px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      transition: background-color 0.3s;
+    }
+
+    /* Page container wrapper */
+    .page-container {
+      position: relative;
+      margin-bottom: 40px;
+      background: #ffffff;
+      box-shadow: var(--shadow-lg);
+      border-radius: 4px;
+      transition: box-shadow 0.3s;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .pdf-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      border-radius: 4px;
+    }
+
+    .annotation-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 5;
+      width: 100%;
+      height: 100%;
+      border-radius: 4px;
+      cursor: crosshair;
+    }
+
+    /* Text Layer for Floating Annotations */
+    .text-annotations-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      pointer-events: none; /* Let clicks pass to canvas if not clicking note */
+    }
+
+    /* Text Note Wrapper */
+    .text-note-wrapper {
+      position: absolute;
+      pointer-events: auto; /* Active for mouse operations */
+      border: 1px dashed transparent;
+      padding: 4px 6px;
+      border-radius: 4px;
+      min-width: 80px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: var(--shadow);
+      cursor: move;
+      transform-origin: top left;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .text-note-wrapper:hover, .text-note-wrapper.dragging {
+      border-color: var(--accent);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .text-note-content {
+      outline: none;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      white-space: pre-wrap;
+      word-break: break-word;
+      min-height: 1.2em;
+      min-width: 40px;
+    }
+
+    .text-note-delete-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 3px;
+      opacity: 0;
+      transition: opacity 0.15s, background 0.15s;
+    }
+
+    .text-note-wrapper:hover .text-note-delete-btn {
+      opacity: 1;
+    }
+
+    .text-note-delete-btn:hover {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .page-badge {
+      position: absolute;
+      bottom: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* Start / File Drop landing screen */
+    .landing-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg-workspace);
+      z-index: 150;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      transition: background-color 0.3s;
+    }
+
+    .drop-zone {
+      width: 100%;
+      max-width: 500px;
+      background: var(--bg-secondary);
+      border: 2px dashed var(--border-color);
+      border-radius: 12px;
+      padding: 50px 30px;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: var(--accent);
+      background: var(--accent-light);
+      transform: scale(1.02);
+    }
+
+    .drop-icon-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--bg-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      box-shadow: var(--shadow);
+      margin-bottom: 8px;
+    }
+
+    .drop-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .drop-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    /* Loading / Exporting Overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(11, 15, 25, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      color: white;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .loading-text {
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Tooltip helpers */
+    [data-tooltip] {
+      position: relative;
+    }
+
+    [data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: -32px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f172a;
+      color: white;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, bottom 0.2s;
+      z-index: 1000;
+    }
+
+    [data-tooltip]:hover::after {
+      opacity: 1;
+      bottom: -28px;
+    }
+
+    /* Sidebar toggle button (floating edge button) */
+    .sidebar-toggle-btn {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 110;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-primary);
+      box-shadow: var(--shadow);
+      transition: all 0.2s;
+    }
+
+    .sidebar-toggle-btn:hover {
+      background: var(--border-color-light);
+    }
+
+    /* Utility spacing */
+    .hidden {
+      display: none !important;
+    }
+  </style>
+
+  <!-- PDF.js via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  
+  <!-- jsPDF via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  
+  <!-- Lucide Icons via CDN -->
+  <script src="https://unpkg.com/lucide@0.292.0/dist/umd/lucide.js"></script>
+</head>
+<body>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay" style="display: none;">
+    <div class="spinner"></div>
+    <div id="loading-text" class="loading-text">Loading Document...</div>
+  </div>
+
+  <!-- Landing / File drop screen -->
+  <div id="landing-screen" class="landing-screen">
+    <div id="drop-zone" class="drop-zone">
+      <div class="drop-icon-circle">
+        <i data-lucide="file-text" style="width: 32px; height: 32px;"></i>
+      </div>
+      <div class="drop-title">Import PDF to Annotate</div>
+      <div class="drop-subtitle">Drag and drop your PDF here, or click to choose from your computer.<br>All processing runs locally inside your browser.</div>
+      <button class="btn btn-primary" style="margin-top: 8px;">Select File</button>
+      <input type="file" id="file-input" class="file-input" accept=".pdf">
+      
+      <div style="margin-top: 16px; width: 100%; border-top: 1px solid var(--border-color-light); padding-top: 16px;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); cursor: pointer; text-decoration: underline;" id="load-sample-btn">
+          Or load sample PDF (powertrust.pdf)
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header Panel -->
+  <header>
+    <div class="brand-section">
+      <div class="brand-logo">P</div>
+      <span class="brand-title">PDF Annotator Pro</span>
+    </div>
+    
+    <!-- Navigation / Zoom Controls -->
+    <div class="viewport-controls">
+      <div class="control-group">
+        <button id="prev-page-btn" class="btn btn-icon" data-tooltip="Previous Page">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <input type="number" id="page-num-input" class="page-nav-input" value="1" min="1" step="1">
+        <span id="page-count" class="page-count-text">/ 0</span>
+        <button id="next-page-btn" class="btn btn-icon" data-tooltip="Next Page">
+          <i data-lucide="chevron-right"></i>
+        </button>
+      </div>
+      
+      <div class="control-divider"></div>
+      
+      <div class="control-group">
+        <button id="zoom-out-btn" class="btn btn-icon" data-tooltip="Zoom Out">
+          <i data-lucide="zoom-out"></i>
+        </button>
+        <select id="zoom-select" class="zoom-select">
+          <option value="50%">50%</option>
+          <option value="75%">75%</option>
+          <option value="100%" selected>100%</option>
+          <option value="125%">125%</option>
+          <option value="150%">150%</option>
+          <option value="200%">200%</option>
+          <option value="300%">300%</option>
+          <option value="width">Fit Width</option>
+          <option value="page">Fit Page</option>
+        </select>
+        <button id="zoom-in-btn" class="btn btn-icon" data-tooltip="Zoom In">
+          <i data-lucide="zoom-in"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="header-actions">
+      <button id="open-file-btn" class="btn" data-tooltip="Load new PDF">
+        <i data-lucide="folder-open"></i> Open File
+      </button>
+      <button id="export-pdf-btn" class="btn btn-primary" data-tooltip="Download PDF with annotations">
+        <i data-lucide="download"></i> Export PDF
+      </button>
+      <button id="theme-toggle-btn" class="btn btn-icon" data-tooltip="Toggle Dark/Light Mode">
+        <i data-lucide="moon"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Annotation Toolbar -->
+  <div class="annotation-toolbar">
+    <!-- Tools -->
+    <button id="tool-pan" class="tool-btn active" data-tool="pan" data-tooltip="Pan / Select (Scroll)">
+      <i data-lucide="hand"></i>
+    </button>
+    <button id="tool-draw" class="tool-btn" data-tool="draw" data-tooltip="Pen Drawing">
+      <i data-lucide="pen-tool"></i>
+    </button>
+    <button id="tool-highlight" class="tool-btn" data-tool="highlight" data-tooltip="Highlighter">
+      <i data-lucide="highlighter"></i>
+    </button>
+    <button id="tool-text" class="tool-btn" data-tool="text" data-tooltip="Add Text Note">
+      <i data-lucide="type"></i>
+    </button>
+    <button id="tool-eraser" class="tool-btn" data-tool="eraser" data-tooltip="Eraser Tool">
+      <i data-lucide="eraser"></i>
+    </button>
+    
+    <div class="tool-btn-divider"></div>
+    
+    <!-- Settings Panel (Color and sizes) -->
+    <div class="style-panel">
+      <!-- Color Swatches -->
+      <div class="color-swatches">
+        <div class="swatch active" style="background-color: #4f46e5;" data-color="#4f46e5" data-tooltip="Indigo"></div>
+        <div class="swatch" style="background-color: #ef4444;" data-color="#ef4444" data-tooltip="Red"></div>
+        <div class="swatch" style="background-color: #10b981;" data-color="#10b981" data-tooltip="Green"></div>
+        <div class="swatch" style="background-color: #f59e0b;" data-color="#f59e0b" data-tooltip="Gold"></div>
+        <div class="swatch" style="background-color: #0f172a;" data-color="#0f172a" id="swatch-neutral" data-tooltip="Dark Slate"></div>
+        <!-- Custom Color Picker -->
+        <div class="custom-color-picker-wrapper" data-tooltip="Custom Color">
+          <input type="color" id="color-picker" class="custom-color-picker" value="#4f46e5">
+        </div>
+      </div>
+      
+      <div class="tool-btn-divider"></div>
+
+      <!-- Stroke Thickness Slider -->
+      <div class="slider-container" id="stroke-slider-container">
+        <span>Stroke</span>
+        <input type="range" id="stroke-width-slider" class="style-slider" min="1" max="15" value="3" data-tooltip="Brush Thickness">
+        <span id="stroke-width-label">3px</span>
+      </div>
+
+      <!-- Text Size Slider -->
+      <div class="slider-container hidden" id="font-slider-container">
+        <span>Text Size</span>
+        <input type="range" id="font-size-slider" class="style-slider" min="10" max="36" value="16" data-tooltip="Font Size">
+        <span id="font-size-label">16px</span>
+      </div>
+    </div>
+    
+    <div class="tool-btn-divider"></div>
+
+    <button id="clear-page-btn" class="btn btn-icon" data-tooltip="Clear Page Annotations" style="color: #ef4444; border-color: transparent; background: transparent;">
+      <i data-lucide="rotate-ccw"></i>
+    </button>
+    <button id="clear-all-btn" class="btn btn-icon" data-tooltip="Clear All Pages Annotations" style="color: #ef4444; border-color: transparent; background: transparent;">
+      <i data-lucide="trash-2"></i>
+    </button>
+  </div>
+
+  <!-- Workspace Container -->
+  <div class="main-workspace">
+    <!-- Toggle Sidebar Button -->
+    <button id="sidebar-toggle-btn" class="sidebar-toggle-btn" data-tooltip="Toggle Sidebar">
+      <i data-lucide="sidebar"></i>
+    </button>
+
+    <!-- Sidebar Panel -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-tabs">
+        <button class="sidebar-tab-btn active" data-target="info-tab">
+          <i data-lucide="info" style="width: 14px; height: 14px;"></i> Details
+        </button>
+        <button class="sidebar-tab-btn" data-target="thumbnails-tab">
+          <i data-lucide="file-text" style="width: 14px; height: 14px;"></i> Pages
+        </button>
+        <button class="sidebar-tab-btn" data-target="annotations-tab">
+          <i data-lucide="pen-tool" style="width: 14px; height: 14px;"></i> Annotations
+        </button>
+      </div>
+      
+      <div class="sidebar-content">
+        <!-- Details tab -->
+        <div id="info-tab" class="sidebar-section active">
+          <div class="info-card">
+            <div class="info-row">
+              <span class="info-label">File Name</span>
+              <span class="info-value" id="info-filename">None loaded</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Pages count</span>
+              <span class="info-value" id="info-pages">0</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">File Size</span>
+              <span class="info-value" id="info-size">Unknown</span>
+            </div>
+          </div>
+          
+          <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; padding: 4px;">
+            <h4 style="font-weight:600; margin-bottom: 6px; color: var(--text-secondary);">Keyboard Shortcuts:</h4>
+            <p style="margin-bottom: 4px;"><kbd style="background:var(--bg-primary); border:1px solid var(--border-color); padding: 1px 4px; border-radius: 3px;">P</kbd> : Pen Tool</p>
+            <p style="margin-bottom: 4px;"><kbd style="background:var(--bg-primary); border:1px solid var(--border-color); padding: 1px 4px; border-radius: 3px;">H</kbd> : Highlighter</p>
+            <p style="margin-bottom: 4px;"><kbd style="background:var(--bg-primary); border:1px solid var(--border-color); padding: 1px 4px; border-radius: 3px;">T</kbd> : Text Annotation</p>
+            <p style="margin-bottom: 4px;"><kbd style="background:var(--bg-primary); border:1px solid var(--border-color); padding: 1px 4px; border-radius: 3px;">E</kbd> : Eraser Tool</p>
+            <p style="margin-bottom: 4px;"><kbd style="background:var(--bg-primary); border:1px solid var(--border-color); padding: 1px 4px; border-radius: 3px;">V</kbd> : Pan Tool</p>
+            <p style="margin-bottom: 4px;"><kbd style="background:var(--bg-primary); border:1px solid var(--border-color); padding: 1px 4px; border-radius: 3px;">+/-</kbd> : Zoom In / Out</p>
+          </div>
+        </div>
+        
+        <!-- Pages thumbnails tab -->
+        <div id="thumbnails-tab" class="sidebar-section">
+          <div class="thumbnails-container" id="thumbnails-container">
+            <!-- Rendered in script -->
+          </div>
+        </div>
+        
+        <!-- Annotations tab -->
+        <div id="annotations-tab" class="sidebar-section">
+          <div class="annotations-list" id="annotations-list">
+            <!-- Rendered in script -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scrollable Workspace containing PDF pages -->
+    <div class="viewer-container" id="viewer-container">
+      <div style="text-align: center; color: var(--text-muted); margin-top: 100px;">
+        <p>No document loaded. Use the top menu to import.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Logic -->
+  <script>
+    // Initialize PDF.js worker
+    const pdfjsLib = window['pdfjs-dist/build/pdf'];
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    // Application State
+    let pdfDoc = null;
+    let numPages = 0;
+    let currentVisiblePage = 1;
+    let scale = 1.0;
+    let activeTool = 'pan';
+    let drawColor = '#4f46e5';
+    let strokeWidth = 3;
+    let fontSize = 16;
+    let pdfFileName = '';
+    
+    // Annotations database
+    // Key: pageIndex (1-based), Value: { drawings: [], texts: [] }
+    // Drawing: { type: 'draw'|'highlight', color: string, width: number, points: [{x,y}] }
+    // Text: { id: string, color: string, fontSize: number, x: number, y: number, text: string }
+    let annotations = {};
+    
+    let isDrawing = false;
+    let currentDrawing = null;
+    let activeCanvas = null;
+    let activePageNum = null;
+    
+    // Lazy loading caches
+    const renderedPages = new Set();
+    let pageHeights = [];
+    let lazyObserver = null;
+
+    // Initialize UI Elements
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      setupEvents();
+      loadSavedTheme();
+      
+      // Auto-load default PDF if served over server, otherwise let user upload
+      const isLocalServer = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1' || 
+                            window.location.port !== '';
+                            
+      if (isLocalServer) {
+        // We will try to fetch the default PDF powertrust.pdf in public/files
+        const defaultPath = 'files/powertrust.pdf';
+        fetch(defaultPath)
+          .then(res => {
+            if (res.ok) return res.blob();
+            throw new Error('Fallback to manual selection');
+          })
+          .then(blob => {
+            const fileReader = new FileReader();
+            fileReader.onload = function() {
+              loadPDF(new Uint8Array(this.result), 'powertrust.pdf');
+            };
+            fileReader.readAsArrayBuffer(blob);
+          })
+          .catch(e => {
+            console.log('No default PDF auto-loaded, waiting for manual upload.', e);
+          });
+      }
+    });
+
+    // Theme Management
+    function loadSavedTheme() {
+      const theme = localStorage.getItem('pdf-theme');
+      if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+        document.getElementById('theme-toggle-btn').innerHTML = '<i data-lucide="sun"></i>';
+        document.getElementById('swatch-neutral').style.backgroundColor = '#f8fafc';
+        document.getElementById('swatch-neutral').setAttribute('data-color', '#f8fafc');
+        lucide.createIcons();
+      }
+    }
+
+    function toggleTheme() {
+      const body = document.body;
+      body.classList.toggle('dark-theme');
+      const isDark = body.classList.contains('dark-theme');
+      localStorage.setItem('pdf-theme', isDark ? 'dark' : 'light');
+      
+      const themeBtn = document.getElementById('theme-toggle-btn');
+      const neutralSwatch = document.getElementById('swatch-neutral');
+      
+      if (isDark) {
+        themeBtn.innerHTML = '<i data-lucide="sun"></i>';
+        neutralSwatch.style.backgroundColor = '#f8fafc';
+        neutralSwatch.setAttribute('data-color', '#f8fafc');
+      } else {
+        themeBtn.innerHTML = '<i data-lucide="moon"></i>';
+        neutralSwatch.style.backgroundColor = '#0f172a';
+        neutralSwatch.setAttribute('data-color', '#0f172a');
+      }
+      
+      // Update color choice if neutral swatch was selected
+      if (drawColor === '#0f172a' && isDark) {
+        updateActiveColor('#f8fafc');
+      } else if (drawColor === '#f8fafc' && !isDark) {
+        updateActiveColor('#0f172a');
+      }
+      
+      lucide.createIcons();
+    }
+
+    // Event Bindings
+    function setupEvents() {
+      // Theme
+      document.getElementById('theme-toggle-btn').onclick = toggleTheme;
+      
+      // Sidebar Toggle
+      document.getElementById('sidebar-toggle-btn').onclick = () => {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('collapsed');
+      };
+      
+      // Sidebar Tabs switching
+      document.querySelectorAll('.sidebar-tab-btn').forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll('.sidebar-tab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.sidebar-section').forEach(s => s.classList.remove('active'));
+          
+          btn.classList.add('active');
+          const target = btn.getAttribute('data-target');
+          document.getElementById(target).classList.add('active');
+        };
+      });
+      
+      // File selector / Drag and drop
+      const fileInput = document.getElementById('file-input');
+      const dropZone = document.getElementById('drop-zone');
+      const openFileBtn = document.getElementById('open-file-btn');
+      
+      openFileBtn.onclick = () => {
+        fileInput.click();
+      };
+      
+      dropZone.onclick = (e) => {
+        if (e.target.tagName !== 'BUTTON') {
+          fileInput.click();
+        }
+      };
+      
+      document.getElementById('load-sample-btn').onclick = (e) => {
+        e.stopPropagation();
+        loadSamplePDF();
+      };
+      
+      fileInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          processFile(file);
+        }
+      };
+      
+      dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+      });
+      
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+      });
+      
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        const file = e.dataTransfer.files[0];
+        if (file && file.type === 'application/pdf') {
+          processFile(file);
+        } else {
+          alert('Please drop a valid PDF file.');
+        }
+      });
+      
+      // Page Navigation controls
+      document.getElementById('prev-page-btn').onclick = () => {
+        scrollToPage(currentVisiblePage - 1);
+      };
+      
+      document.getElementById('next-page-btn').onclick = () => {
+        scrollToPage(currentVisiblePage + 1);
+      };
+      
+      document.getElementById('page-num-input').onchange = (e) => {
+        let val = parseInt(e.target.value);
+        if (isNaN(val) || val < 1) val = 1;
+        if (val > numPages) val = numPages;
+        scrollToPage(val);
+      };
+      
+      // Zoom Controls
+      document.getElementById('zoom-in-btn').onclick = () => {
+        changeZoom(scale + 0.25);
+      };
+      
+      document.getElementById('zoom-out-btn').onclick = () => {
+        changeZoom(Math.max(0.25, scale - 0.25));
+      };
+      
+      document.getElementById('zoom-select').onchange = (e) => {
+        const value = e.target.value;
+        if (value === 'width') {
+          fitToWidth();
+        } else if (value === 'page') {
+          fitToPage();
+        } else {
+          const newScale = parseFloat(value) / 100;
+          changeZoom(newScale);
+        }
+      };
+      
+      // Tool selector
+      document.querySelectorAll('.tool-btn').forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          setActiveTool(btn.getAttribute('data-tool'));
+        };
+      });
+      
+      // Color swatches
+      document.querySelectorAll('.swatch').forEach(swatch => {
+        swatch.onclick = () => {
+          document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+          swatch.classList.add('active');
+          updateActiveColor(swatch.getAttribute('data-color'));
+        };
+      });
+      
+      const colorPicker = document.getElementById('color-picker');
+      colorPicker.oninput = (e) => {
+        document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+        updateActiveColor(e.target.value);
+      };
+      
+      // Sliders
+      const strokeSlider = document.getElementById('stroke-width-slider');
+      strokeSlider.oninput = (e) => {
+        strokeWidth = parseInt(e.target.value);
+        document.getElementById('stroke-width-label').innerText = strokeWidth + 'px';
+      };
+      
+      const fontSlider = document.getElementById('font-size-slider');
+      fontSlider.oninput = (e) => {
+        fontSize = parseInt(e.target.value);
+        document.getElementById('font-size-label').innerText = fontSize + 'px';
+      };
+      
+      // Clear All
+      document.getElementById('clear-page-btn').onclick = clearCurrentPageAnnotations;
+      document.getElementById('clear-all-btn').onclick = clearAllAnnotations;
+      
+      // Export / Download
+      document.getElementById('export-pdf-btn').onclick = exportPDF;
+      
+      // Keyboard shortcuts listener
+      window.addEventListener('keydown', (e) => {
+        // Skip shortcuts if inside contenteditable text field
+        if (document.activeElement && document.activeElement.contentEditable === 'true') return;
+        
+        switch (e.key.toLowerCase()) {
+          case 'p':
+            document.getElementById('tool-draw').click();
+            break;
+          case 'h':
+            document.getElementById('tool-highlight').click();
+            break;
+          case 't':
+            document.getElementById('tool-text').click();
+            break;
+          case 'e':
+            document.getElementById('tool-eraser').click();
+            break;
+          case 'v':
+            document.getElementById('tool-pan').click();
+            break;
+          case '+':
+            document.getElementById('zoom-in-btn').click();
+            break;
+          case '-':
+            document.getElementById('zoom-out-btn').click();
+            break;
+        }
+      });
+    }
+
+    // File Loading Processing
+    function processFile(file) {
+      const loader = document.getElementById('loading-overlay');
+      loader.style.display = 'flex';
+      document.getElementById('loading-text').innerText = 'Reading file metadata...';
+      
+      // Display info size
+      let sizeStr = '';
+      if (file.size > 1024 * 1024) {
+        sizeStr = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+      } else {
+        sizeStr = (file.size / 1024).toFixed(2) + ' KB';
+      }
+      document.getElementById('info-size').innerText = sizeStr;
+      
+      const fileReader = new FileReader();
+      fileReader.onload = function() {
+        const typedarray = new Uint8Array(this.result);
+        loadPDF(typedarray, file.name);
+      };
+      fileReader.onerror = () => {
+        loader.style.display = 'none';
+        alert('Failed reading file.');
+      };
+      fileReader.readAsArrayBuffer(file);
+    }
+
+    async function loadSamplePDF() {
+      const defaultPath = 'files/powertrust.pdf';
+      const loader = document.getElementById('loading-overlay');
+      loader.style.display = 'flex';
+      document.getElementById('loading-text').innerText = 'Downloading sample PDF...';
+      
+      try {
+        const res = await fetch(defaultPath);
+        if (!res.ok) throw new Error('File not found');
+        const sizeStr = res.headers.get('content-length');
+        if (sizeStr) {
+          const s = parseInt(sizeStr);
+          document.getElementById('info-size').innerText = (s / 1024).toFixed(2) + ' KB';
+        } else {
+          document.getElementById('info-size').innerText = '395 KB';
+        }
+        
+        const blob = await res.blob();
+        const fileReader = new FileReader();
+        fileReader.onload = function() {
+          loadPDF(new Uint8Array(this.result), 'powertrust.pdf');
+        };
+        fileReader.readAsArrayBuffer(blob);
+      } catch (e) {
+        loader.style.display = 'none';
+        alert('Could not download sample PDF from public directory. Please drag and drop a PDF instead.');
+      }
+    }
+
+    // Setup Active Tool Options
+    function setActiveTool(tool) {
+      activeTool = tool;
+      
+      // Show/Hide sliders accordingly
+      const strokeContainer = document.getElementById('stroke-slider-container');
+      const fontContainer = document.getElementById('font-slider-container');
+      
+      if (tool === 'text') {
+        strokeContainer.classList.add('hidden');
+        fontContainer.classList.remove('hidden');
+      } else {
+        strokeContainer.classList.remove('hidden');
+        fontContainer.classList.add('hidden');
+      }
+      
+      // Update canvas events for cursor/interactivity
+      updateCanvasesPointerEvents();
+    }
+
+    function updateCanvasesPointerEvents() {
+      const canvases = document.querySelectorAll('.annotation-canvas');
+      canvases.forEach(c => {
+        if (activeTool === 'pan') {
+          c.style.pointerEvents = 'none';
+        } else {
+          c.style.pointerEvents = 'auto';
+        }
+      });
+    }
+
+    function updateActiveColor(color) {
+      drawColor = color;
+      document.getElementById('color-picker').value = color;
+    }
+
+    // PDF.js rendering loops
+    async function loadPDF(pdfData, filename) {
+      pdfFileName = filename;
+      renderedPages.clear();
+      pageHeights = [];
+      annotations = {};
+      
+      const loader = document.getElementById('loading-overlay');
+      loader.style.display = 'flex';
+      document.getElementById('loading-text').innerText = 'Initializing engine...';
+      
+      try {
+        const loadingTask = pdfjsLib.getDocument(pdfData);
+        pdfDoc = await loadingTask.promise;
+        numPages = pdfDoc.numPages;
+        
+        // Hide landing
+        document.getElementById('landing-screen').style.display = 'none';
+        
+        // Update header toolbar page controls
+        document.getElementById('page-count').innerText = `/ ${numPages}`;
+        document.getElementById('page-num-input').max = numPages;
+        document.getElementById('page-num-input').value = 1;
+        
+        // Update sidebar info
+        document.getElementById('info-filename').innerText = filename;
+        document.getElementById('info-pages').innerText = `${numPages} pages`;
+        
+        // Initialize annotations state database
+        for (let i = 1; i <= numPages; i++) {
+          annotations[i] = { drawings: [], texts: [] };
+        }
+        
+        const viewer = document.getElementById('viewer-container');
+        viewer.innerHTML = '';
+        
+        const thumbnailsContainer = document.getElementById('thumbnails-container');
+        thumbnailsContainer.innerHTML = '';
+        
+        // Pre-query page viewports to build containers immediately (zero layout shifts)
+        for (let i = 1; i <= numPages; i++) {
+          document.getElementById('loading-text').innerText = `Preparing page layouts: ${i} / ${numPages}`;
+          
+          const page = await pdfDoc.getPage(i);
+          const viewport = page.getViewport({ scale: 1.0 });
+          pageHeights.push({
+            width: viewport.width,
+            height: viewport.height,
+            aspectRatio: viewport.width / viewport.height
+          });
+          
+          // Container wrapper
+          const pageContainer = document.createElement('div');
+          pageContainer.className = 'page-container';
+          pageContainer.id = `page-container-${i}`;
+          pageContainer.setAttribute('data-page-num', i);
+          
+          const w = viewport.width * scale;
+          const h = viewport.height * scale;
+          pageContainer.style.width = `${w}px`;
+          pageContainer.style.height = `${h}px`;
+          
+          const canvasWrapper = document.createElement('div');
+          canvasWrapper.className = 'canvas-wrapper';
+          
+          const pdfCanvas = document.createElement('canvas');
+          pdfCanvas.className = 'pdf-canvas';
+          pdfCanvas.id = `pdf-canvas-${i}`;
+          
+          const annCanvas = document.createElement('canvas');
+          annCanvas.className = 'annotation-canvas';
+          annCanvas.id = `annotation-canvas-${i}`;
+          
+          const textLayer = document.createElement('div');
+          textLayer.className = 'text-annotations-layer';
+          textLayer.id = `text-layer-${i}`;
+          
+          canvasWrapper.appendChild(pdfCanvas);
+          canvasWrapper.appendChild(annCanvas);
+          canvasWrapper.appendChild(textLayer);
+          
+          const pageBadge = document.createElement('div');
+          pageBadge.className = 'page-badge';
+          pageBadge.innerText = `Page ${i}`;
+          
+          pageContainer.appendChild(canvasWrapper);
+          pageContainer.appendChild(pageBadge);
+          viewer.appendChild(pageContainer);
+          
+          // Wire up event listeners
+          setupAnnotationEvents(annCanvas, i);
+          
+          // Thumbnails
+          createThumbnailCard(i, viewport.width / viewport.height);
+        }
+        
+        // Active tool configurations
+        updateCanvasesPointerEvents();
+        
+        // Lazy loading observer trigger
+        setupLazyLoading();
+        
+        // Load sidebar list
+        updateAnnotationsSidebar();
+        
+        // Start rendering page thumbnails asynchronously in background
+        renderThumbnails();
+        
+      } catch (err) {
+        console.error('Error parsing PDF:', err);
+        alert('Failed parsing PDF: ' + err.message);
+        document.getElementById('landing-screen').style.display = 'flex';
+      } finally {
+        loader.style.display = 'none';
+      }
+    }
+
+    // Lazy Loading Observer Setup
+    function setupLazyLoading() {
+      if (lazyObserver) {
+        lazyObserver.disconnect();
+      }
+      
+      const options = {
+        root: document.getElementById('viewer-container'),
+        rootMargin: '200px 0px 200px 0px', // Pre-render triggers
+        threshold: 0.05
+      };
+      
+      lazyObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const pageNum = parseInt(entry.target.getAttribute('data-page-num'));
+            if (!renderedPages.has(pageNum)) {
+              renderPage(pageNum);
+            }
+            
+            // Auto update navigation indicator toolbar
+            updateCurrentPageIndicator(pageNum);
+          }
+        });
+      }, options);
+      
+      document.querySelectorAll('.page-container').forEach(el => {
+        lazyObserver.observe(el);
+      });
+    }
+
+    // Render single PDF page canvas
+    async function renderPage(pageNum) {
+      if (!pdfDoc) return;
+      renderedPages.add(pageNum);
+      
+      const pdfCanvas = document.getElementById(`pdf-canvas-${pageNum}`);
+      const annCanvas = document.getElementById(`annotation-canvas-${pageNum}`);
+      if (!pdfCanvas || !annCanvas) return;
+      
+      try {
+        const page = await pdfDoc.getPage(pageNum);
+        const viewport = page.getViewport({ scale: scale });
+        
+        // Resize PDF drawing canvas
+        pdfCanvas.width = viewport.width;
+        pdfCanvas.height = viewport.height;
+        
+        // Resize Annotation drawing canvas
+        annCanvas.width = viewport.width;
+        annCanvas.height = viewport.height;
+        
+        // Render PDF page vectors to canvas
+        const ctx = pdfCanvas.getContext('2d');
+        const renderCtx = {
+          canvasContext: ctx,
+          viewport: viewport
+        };
+        await page.render(renderCtx).promise;
+        
+        // Render existing shapes drawings
+        drawPageAnnotations(pageNum);
+        
+        // Update floating editables
+        updatePageTextAnnotations(pageNum);
+      } catch (err) {
+        console.error(`Error rendering page ${pageNum}:`, err);
+      }
+    }
+
+    // Render page thumbnails async
+    async function renderThumbnails() {
+      for (let i = 1; i <= numPages; i++) {
+        // Stop if user loads a new document in the middle
+        if (!pdfDoc) break;
+        
+        try {
+          const page = await pdfDoc.getPage(i);
+          const canvas = document.getElementById(`thumbnail-canvas-${i}`);
+          if (!canvas) continue;
+          
+          const ctx = canvas.getContext('2d');
+          const scaleForThumb = canvas.width / page.getViewport({ scale: 1.0 }).width;
+          const viewport = page.getViewport({ scale: scaleForThumb });
+          
+          await page.render({
+            canvasContext: ctx,
+            viewport: viewport
+          }).promise;
+        } catch (e) {
+          console.warn('Failed rendering thumbnail:', i, e);
+        }
+      }
+    }
+
+    // Zoom Scaling Math
+    function changeZoom(newScale) {
+      if (!pdfDoc) return;
+      
+      scale = newScale;
+      
+      // Update Toolbar Selection UI
+      const percentVal = Math.round(scale * 100) + '%';
+      const select = document.getElementById('zoom-select');
+      
+      // Check if value is in dropdown options
+      let found = false;
+      for (let i = 0; i < select.options.length; i++) {
+        if (select.options[i].value === percentVal) {
+          select.selectedIndex = i;
+          found = true;
+          break;
+        }
+      }
+      // Set to custom if option not in standard select
+      if (!found) {
+        select.value = '100%'; // fallback value to prevent visual bugs
+      }
+      
+      // Clear rendered status cache
+      renderedPages.clear();
+      
+      // Adapt page containers dimensions immediately so scrolling isn't interrupted
+      for (let i = 1; i <= numPages; i++) {
+        const pageContainer = document.getElementById(`page-container-${i}`);
+        if (!pageContainer) continue;
+        
+        const dims = pageHeights[i - 1];
+        if (dims) {
+          const w = dims.width * scale;
+          const h = dims.height * scale;
+          pageContainer.style.width = `${w}px`;
+          pageContainer.style.height = `${h}px`;
+        }
+      }
+      
+      // Re-trigger viewport detection
+      setupLazyLoading();
+    }
+
+    function fitToWidth() {
+      if (pageHeights.length === 0) return;
+      const viewer = document.getElementById('viewer-container');
+      const wWidth = viewer.clientWidth - 50; // padding margins
+      const firstPageWidth = pageHeights[0].width;
+      const fitScale = wWidth / firstPageWidth;
+      changeZoom(fitScale);
+    }
+
+    function fitToPage() {
+      if (pageHeights.length === 0) return;
+      const viewer = document.getElementById('viewer-container');
+      const wHeight = viewer.clientHeight - 80;
+      const firstPageHeight = pageHeights[0].height;
+      const fitScale = wHeight / firstPageHeight;
+      changeZoom(fitScale);
+    }
+
+    // Scrolling and Navigation Indicators
+    function scrollToPage(pageNum) {
+      if (pageNum < 1 || pageNum > numPages) return;
+      const container = document.getElementById(`page-container-${pageNum}`);
+      if (container) {
+        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        updateCurrentPageIndicator(pageNum);
+      }
+    }
+
+    function updateCurrentPageIndicator(pageNum) {
+      currentVisiblePage = pageNum;
+      document.getElementById('page-num-input').value = pageNum;
+      
+      // Highlight sidebar page card
+      document.querySelectorAll('.thumbnail-card').forEach(el => {
+        el.classList.remove('active');
+      });
+      const activeCard = document.getElementById(`thumbnail-card-${pageNum}`);
+      if (activeCard) {
+        activeCard.classList.add('active');
+        activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    function createThumbnailCard(pageNum, aspectRatio) {
+      const container = document.getElementById('thumbnails-container');
+      
+      const thumbCard = document.createElement('div');
+      thumbCard.className = 'thumbnail-card';
+      thumbCard.id = `thumbnail-card-${pageNum}`;
+      thumbCard.onclick = () => {
+        scrollToPage(pageNum);
+      };
+      
+      const thumbCanvas = document.createElement('canvas');
+      thumbCanvas.className = 'thumbnail-canvas';
+      thumbCanvas.id = `thumbnail-canvas-${pageNum}`;
+      
+      const width = 110;
+      const height = width / aspectRatio;
+      thumbCanvas.width = width;
+      thumbCanvas.height = height;
+      
+      const label = document.createElement('div');
+      label.className = 'thumbnail-label';
+      label.innerText = `Page ${pageNum}`;
+      
+      thumbCard.appendChild(thumbCanvas);
+      thumbCard.appendChild(label);
+      container.appendChild(thumbCard);
+    }
+
+    // Drawing Vector Canvas Logic
+    function setupAnnotationEvents(canvas, pageNum) {
+      const getMousePos = (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: clientX - rect.left,
+          y: clientY - rect.top
+        };
+      };
+
+      const startDrawing = (e) => {
+        if (activeTool === 'pan') return;
+        
+        const pos = getMousePos(e);
+        const unscaledX = pos.x / scale;
+        const unscaledY = pos.y / scale;
+        
+        if (activeTool === 'text') {
+          addTextAnnotation(pageNum, pos.x, pos.y);
+          return;
+        }
+        
+        isDrawing = true;
+        activeCanvas = canvas;
+        activePageNum = pageNum;
+        
+        if (activeTool === 'eraser') {
+          eraseAt(pageNum, pos.x, pos.y);
+          return;
+        }
+        
+        currentDrawing = {
+          type: activeTool,
+          color: drawColor,
+          width: strokeWidth,
+          points: [{ x: unscaledX, y: unscaledY }]
+        };
+      };
+
+      const draw = (e) => {
+        if (!isDrawing || activeCanvas !== canvas) return;
+        
+        const pos = getMousePos(e);
+        const unscaledX = pos.x / scale;
+        const unscaledY = pos.y / scale;
+        
+        if (activeTool === 'eraser') {
+          eraseAt(pageNum, pos.x, pos.y);
+          return;
+        }
+        
+        if (!currentDrawing) return;
+        
+        const lastPt = currentDrawing.points[currentDrawing.points.length - 1];
+        if (lastPt && lastPt.x === unscaledX && lastPt.y === unscaledY) return;
+        
+        currentDrawing.points.push({ x: unscaledX, y: unscaledY });
+        
+        // Direct draw rendering update with temporary line active
+        drawPageAnnotationsWithActive(pageNum, currentDrawing);
+      };
+
+      const stopDrawing = () => {
+        if (!isDrawing) return;
+        isDrawing = false;
+        activeCanvas = null;
+        
+        if (currentDrawing) {
+          if (currentDrawing.points.length > 1) {
+            annotations[pageNum].drawings.push(currentDrawing);
+            updateAnnotationsSidebar();
+          }
+          currentDrawing = null;
+          drawPageAnnotations(pageNum);
+        }
+      };
+
+      canvas.addEventListener('mousedown', startDrawing);
+      canvas.addEventListener('mousemove', draw);
+      window.addEventListener('mouseup', stopDrawing);
+
+      // Mobile Touch events
+      canvas.addEventListener('touchstart', (e) => {
+        if (activeTool !== 'pan') e.preventDefault();
+        startDrawing(e);
+      }, { passive: false });
+      
+      canvas.addEventListener('touchmove', (e) => {
+        if (activeTool !== 'pan') e.preventDefault();
+        draw(e);
+      }, { passive: false });
+      
+      canvas.addEventListener('touchend', stopDrawing);
+    }
+
+    function drawPageAnnotations(pageNum) {
+      drawPageAnnotationsWithActive(pageNum, null);
+    }
+
+    function drawPageAnnotationsWithActive(pageNum, activeDrawing = null) {
+      const canvas = document.getElementById(`annotation-canvas-${pageNum}`);
+      if (!canvas) return;
+      
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      ctx.save();
+      ctx.scale(scale, scale);
+      
+      const pageAnns = annotations[pageNum] || { drawings: [], texts: [] };
+      
+      const drawPath = (drawing) => {
+        if (drawing.points.length < 1) return;
+        
+        ctx.beginPath();
+        ctx.strokeStyle = drawing.color;
+        ctx.lineWidth = drawing.width;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        
+        if (drawing.type === 'highlight') {
+          ctx.globalAlpha = 0.45;
+          ctx.globalCompositeOperation = 'multiply';
+        } else {
+          ctx.globalAlpha = 1.0;
+          ctx.globalCompositeOperation = 'source-over';
+        }
+        
+        ctx.moveTo(drawing.points[0].x, drawing.points[0].y);
+        for (let i = 1; i < drawing.points.length; i++) {
+          ctx.lineTo(drawing.points[i].x, drawing.points[i].y);
+        }
+        ctx.stroke();
+      };
+      
+      // Draw all saved paths
+      pageAnns.drawings.forEach(drawPath);
+      
+      // Draw active line currently drawn
+      if (activeDrawing) {
+        drawPath(activeDrawing);
+      }
+      
+      ctx.restore();
+    }
+
+    // Editable Text Overlays Logic
+    function updatePageTextAnnotations(pageNum) {
+      const layer = document.getElementById(`text-layer-${pageNum}`);
+      if (!layer) return;
+      
+      layer.innerHTML = '';
+      
+      const pageAnns = annotations[pageNum] || { drawings: [], texts: [] };
+      
+      pageAnns.texts.forEach(textObj => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'text-note-wrapper';
+        wrapper.id = `note-wrapper-${textObj.id}`;
+        
+        // Position relative to current scale
+        wrapper.style.left = `${textObj.x * scale}px`;
+        wrapper.style.top = `${textObj.y * scale}px`;
+        wrapper.style.fontSize = `${textObj.fontSize * scale}px`;
+        wrapper.style.color = textObj.color;
+        
+        // Editable node
+        const content = document.createElement('div');
+        content.className = 'text-note-content';
+        content.contentEditable = true;
+        content.innerText = textObj.text;
+        
+        content.oninput = () => {
+          textObj.text = content.innerText;
+          updateAnnotationsSidebar();
+        };
+        
+        // Stop drag events while typing
+        content.addEventListener('mousedown', (e) => e.stopPropagation());
+        content.addEventListener('touchstart', (e) => e.stopPropagation());
+        
+        // Delete button
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'text-note-delete-btn';
+        deleteBtn.innerHTML = '<i data-lucide="x" style="width: 12px; height: 12px;"></i>';
+        deleteBtn.onclick = (e) => {
+          e.stopPropagation();
+          deleteTextAnnotation(pageNum, textObj.id);
+        };
+        
+        wrapper.appendChild(content);
+        wrapper.appendChild(deleteBtn);
+        
+        // Setup Drag behavior
+        setupTextDrag(wrapper, textObj, pageNum);
+        
+        layer.appendChild(wrapper);
+      });
+      
+      lucide.createIcons();
+    }
+
+    function setupTextDrag(wrapper, textObj, pageNum) {
+      let isDraggingText = false;
+      let startX = 0, startY = 0;
+      let startLeft = 0, startTop = 0;
+      
+      const onMouseDown = (e) => {
+        if (e.target.classList.contains('text-note-content') || 
+            e.target.closest('.text-note-delete-btn')) return;
+            
+        e.preventDefault();
+        isDraggingText = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        
+        startLeft = textObj.x * scale;
+        startTop = textObj.y * scale;
+        
+        wrapper.classList.add('dragging');
+        
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mouseup', onMouseUp);
+      };
+      
+      const onMouseMove = (e) => {
+        if (!isDraggingText) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        
+        const newL = startLeft + dx;
+        const newT = startTop + dy;
+        
+        wrapper.style.left = `${newL}px`;
+        wrapper.style.top = `${newT}px`;
+        
+        // Save in base scale 1.0 coordinates
+        textObj.x = newL / scale;
+        textObj.y = newT / scale;
+      };
+      
+      const onMouseUp = () => {
+        isDraggingText = false;
+        wrapper.classList.remove('dragging');
+        window.removeEventListener('mousemove', onMouseMove);
+        window.removeEventListener('mouseup', onMouseUp);
+        updateAnnotationsSidebar();
+      };
+      
+      wrapper.addEventListener('mousedown', onMouseDown);
+      
+      // Mobile support
+      wrapper.addEventListener('touchstart', (e) => {
+        if (e.target.classList.contains('text-note-content') || 
+            e.target.closest('.text-note-delete-btn')) return;
+        
+        const touch = e.touches[0];
+        startX = touch.clientX;
+        startY = touch.clientY;
+        startLeft = textObj.x * scale;
+        startTop = textObj.y * scale;
+        isDraggingText = true;
+        
+        const onTouchMove = (moveEvt) => {
+          if (!isDraggingText) return;
+          const touchMove = moveEvt.touches[0];
+          const dx = touchMove.clientX - startX;
+          const dy = touchMove.clientY - startY;
+          
+          const newL = startLeft + dx;
+          const newT = startTop + dy;
+          
+          wrapper.style.left = `${newL}px`;
+          wrapper.style.top = `${newT}px`;
+          
+          textObj.x = newL / scale;
+          textObj.y = newT / scale;
+        };
+        
+        const onTouchEnd = () => {
+          isDraggingText = false;
+          window.removeEventListener('touchmove', onTouchMove);
+          window.removeEventListener('touchend', onTouchEnd);
+          updateAnnotationsSidebar();
+        };
+        
+        window.addEventListener('touchmove', onTouchMove, { passive: false });
+        window.addEventListener('touchend', onTouchEnd);
+      });
+    }
+
+    function addTextAnnotation(pageNum, canvasX, canvasY) {
+      const unscaledX = canvasX / scale;
+      const unscaledY = canvasY / scale;
+      
+      const textId = 'text-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+      const newText = {
+        id: textId,
+        x: unscaledX,
+        y: unscaledY,
+        text: 'Add text here',
+        color: drawColor,
+        fontSize: fontSize
+      };
+      
+      annotations[pageNum].texts.push(newText);
+      updatePageTextAnnotations(pageNum);
+      updateAnnotationsSidebar();
+      
+      // Focus on text box automatically
+      setTimeout(() => {
+        const textbox = document.querySelector(`#note-wrapper-${textId} .text-note-content`);
+        if (textbox) {
+          textbox.focus();
+          const range = document.createRange();
+          range.selectNodeContents(textbox);
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+        }
+      }, 50);
+    }
+
+    // Eraser Tool Mechanics
+    function eraseAt(pageNum, canvasX, canvasY) {
+      const pageAnns = annotations[pageNum];
+      if (!pageAnns) return;
+      
+      const unscaledX = canvasX / scale;
+      const unscaledY = canvasY / scale;
+      const threshold = 15; // Unscaled erase detection radius
+      
+      let changed = false;
+      
+      // Drawings vector distance matching
+      const drawCountBefore = pageAnns.drawings.length;
+      pageAnns.drawings = pageAnns.drawings.filter(drawing => {
+        const isClose = drawing.points.some(p => {
+          const dx = p.x - unscaledX;
+          const dy = p.y - unscaledY;
+          return Math.sqrt(dx*dx + dy*dy) < threshold;
+        });
+        return !isClose;
+      });
+      if (pageAnns.drawings.length !== drawCountBefore) changed = true;
+      
+      // Text coordinates box boundaries matching
+      const textCountBefore = pageAnns.texts.length;
+      pageAnns.texts = pageAnns.texts.filter(textObj => {
+        const dx = textObj.x - unscaledX;
+        const dy = textObj.y - unscaledY;
+        const boxWidth = 100; // estimated width
+        const boxHeight = 25; // estimated height
+        
+        const isInside = unscaledX >= textObj.x && unscaledX <= textObj.x + boxWidth &&
+                         unscaledY >= textObj.y && unscaledY <= textObj.y + boxHeight;
+        return !isInside;
+      });
+      if (pageAnns.texts.length !== textCountBefore) {
+        changed = true;
+        updatePageTextAnnotations(pageNum);
+      }
+      
+      if (changed) {
+        drawPageAnnotations(pageNum);
+        updateAnnotationsSidebar();
+      }
+    }
+
+    function deleteTextAnnotation(pageNum, id) {
+      if (annotations[pageNum]) {
+        annotations[pageNum].texts = annotations[pageNum].texts.filter(t => t.id !== id);
+        updatePageTextAnnotations(pageNum);
+        updateAnnotationsSidebar();
+      }
+    }
+
+    function deleteDrawing(pageNum, index) {
+      if (annotations[pageNum] && annotations[pageNum].drawings[index]) {
+        annotations[pageNum].drawings.splice(index, 1);
+        drawPageAnnotations(pageNum);
+        updateAnnotationsSidebar();
+      }
+    }
+
+    function clearCurrentPageAnnotations() {
+      if (!pdfDoc) return;
+      if (confirm(`Clear annotations on Page ${currentVisiblePage}?`)) {
+        annotations[currentVisiblePage] = { drawings: [], texts: [] };
+        drawPageAnnotations(currentVisiblePage);
+        updatePageTextAnnotations(currentVisiblePage);
+        updateAnnotationsSidebar();
+      }
+    }
+
+    function clearAllAnnotations() {
+      if (!pdfDoc) return;
+      if (confirm('Clear all annotations from the entire document?')) {
+        for (let i = 1; i <= numPages; i++) {
+          annotations[i] = { drawings: [], texts: [] };
+          drawPageAnnotations(i);
+          updatePageTextAnnotations(i);
+        }
+        updateAnnotationsSidebar();
+      }
+    }
+
+    // Update Annotations List in Sidebar
+    function updateAnnotationsSidebar() {
+      const list = document.getElementById('annotations-list');
+      list.innerHTML = '';
+      
+      let totalCount = 0;
+      
+      for (let i = 1; i <= numPages; i++) {
+        const pageAnns = annotations[i];
+        if (!pageAnns) continue;
+        
+        // Drawings
+        pageAnns.drawings.forEach((drawing, index) => {
+          totalCount++;
+          const item = document.createElement('div');
+          item.className = 'annotation-item';
+          item.onclick = () => scrollToPage(i);
+          
+          const indicator = document.createElement('div');
+          indicator.className = 'ann-item-icon';
+          indicator.style.backgroundColor = drawing.color;
+          
+          const details = document.createElement('div');
+          details.className = 'ann-item-details';
+          
+          const title = document.createElement('div');
+          title.className = 'ann-item-title';
+          title.innerText = drawing.type === 'highlight' ? 'Highlight' : 'Pen Drawing';
+          
+          const subtitle = document.createElement('div');
+          subtitle.className = 'ann-item-subtitle';
+          subtitle.innerText = `Page ${i} • Stroke ${drawing.width}px`;
+          
+          details.appendChild(title);
+          details.appendChild(subtitle);
+          
+          const deleteBtn = document.createElement('button');
+          deleteBtn.className = 'ann-item-delete-btn';
+          deleteBtn.innerHTML = '<i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>';
+          deleteBtn.onclick = (e) => {
+            e.stopPropagation();
+            deleteDrawing(i, index);
+          };
+          
+          item.appendChild(indicator);
+          item.appendChild(details);
+          item.appendChild(deleteBtn);
+          list.appendChild(item);
+        });
+        
+        // Texts
+        pageAnns.texts.forEach(textObj => {
+          totalCount++;
+          const item = document.createElement('div');
+          item.className = 'annotation-item';
+          item.onclick = () => scrollToPage(i);
+          
+          const indicator = document.createElement('div');
+          indicator.className = 'ann-item-icon text-icon';
+          indicator.innerHTML = '<i data-lucide="type" style="width: 12px; height: 12px;"></i>';
+          indicator.style.color = textObj.color;
+          
+          const details = document.createElement('div');
+          details.className = 'ann-item-details';
+          
+          const title = document.createElement('div');
+          title.className = 'ann-item-title';
+          title.innerText = textObj.text.trim() || '(Empty Note)';
+          
+          const subtitle = document.createElement('div');
+          subtitle.className = 'ann-item-subtitle';
+          subtitle.innerText = `Page ${i} • Font ${textObj.fontSize}px`;
+          
+          details.appendChild(title);
+          details.appendChild(subtitle);
+          
+          const deleteBtn = document.createElement('button');
+          deleteBtn.className = 'ann-item-delete-btn';
+          deleteBtn.innerHTML = '<i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>';
+          deleteBtn.onclick = (e) => {
+            e.stopPropagation();
+            deleteTextAnnotation(i, textObj.id);
+          };
+          
+          item.appendChild(indicator);
+          item.appendChild(details);
+          item.appendChild(deleteBtn);
+          list.appendChild(item);
+        });
+      }
+      
+      if (totalCount === 0) {
+        list.innerHTML = `
+          <div class="no-annotations">
+            <i data-lucide="info"></i>
+            <span>No annotations yet.<br>Choose Pen, Highlighter, or Text to begin editing!</span>
+          </div>
+        `;
+      }
+      
+      lucide.createIcons();
+    }
+
+    // High-Fidelity Client-side Export using Canvas Merging & jsPDF
+    async function exportPDF() {
+      if (!pdfDoc) return;
+      
+      const overlay = document.getElementById('loading-overlay');
+      const label = document.getElementById('loading-text');
+      overlay.style.display = 'flex';
+      label.innerText = 'Initializing PDF generator...';
+      
+      try {
+        const { jsPDF } = window.jspdf;
+        
+        // Export rendering scale (higher = sharper output print)
+        const exportScale = 2.0;
+        let exportDoc = null;
+        
+        for (let i = 1; i <= numPages; i++) {
+          label.innerText = `Exporting page ${i} of ${numPages} (Applying vector layers)...`;
+          
+          const page = await pdfDoc.getPage(i);
+          const viewport = page.getViewport({ scale: exportScale });
+          
+          // PDF Render Canvas
+          const pdfCanvas = document.createElement('canvas');
+          pdfCanvas.width = viewport.width;
+          pdfCanvas.height = viewport.height;
+          const pdfCtx = pdfCanvas.getContext('2d');
+          
+          await page.render({
+            canvasContext: pdfCtx,
+            viewport: viewport
+          }).promise;
+          
+          // Annotation Render Canvas
+          const annCanvas = document.createElement('canvas');
+          annCanvas.width = viewport.width;
+          annCanvas.height = viewport.height;
+          const annCtx = annCanvas.getContext('2d');
+          
+          // Scale drawing parameters to matching scale
+          annCtx.scale(exportScale, exportScale);
+          
+          const pageAnns = annotations[i] || { drawings: [], texts: [] };
+          
+          // Render Drawings
+          pageAnns.drawings.forEach(drawing => {
+            if (drawing.points.length < 1) return;
+            
+            annCtx.beginPath();
+            annCtx.strokeStyle = drawing.color;
+            annCtx.lineWidth = drawing.width;
+            annCtx.lineCap = 'round';
+            annCtx.lineJoin = 'round';
+            
+            if (drawing.type === 'highlight') {
+              annCtx.globalAlpha = 0.45;
+              annCtx.globalCompositeOperation = 'multiply';
+            } else {
+              annCtx.globalAlpha = 1.0;
+              annCtx.globalCompositeOperation = 'source-over';
+            }
+            
+            annCtx.moveTo(drawing.points[0].x, drawing.points[0].y);
+            for (let j = 1; j < drawing.points.length; j++) {
+              annCtx.lineTo(drawing.points[j].x, drawing.points[j].y);
+            }
+            annCtx.stroke();
+          });
+          
+          // Render Texts
+          annCtx.globalAlpha = 1.0;
+          annCtx.globalCompositeOperation = 'source-over';
+          pageAnns.texts.forEach(textObj => {
+            annCtx.font = `500 ${textObj.fontSize}px 'Inter', sans-serif`;
+            annCtx.fillStyle = textObj.color;
+            annCtx.textBaseline = 'top';
+            
+            const lines = textObj.text.split('\n');
+            let currentY = textObj.y;
+            lines.forEach(line => {
+              annCtx.fillText(line, textObj.x, currentY);
+              currentY += textObj.fontSize * 1.25;
+            });
+          });
+          
+          // Merge Canvas
+          const mergeCanvas = document.createElement('canvas');
+          mergeCanvas.width = viewport.width;
+          mergeCanvas.height = viewport.height;
+          const mergeCtx = mergeCanvas.getContext('2d');
+          
+          mergeCtx.drawImage(pdfCanvas, 0, 0);
+          mergeCtx.drawImage(annCanvas, 0, 0);
+          
+          // Convert to highly detailed JPEG
+          const imgData = mergeCanvas.toDataURL('image/jpeg', 0.95);
+          
+          const orient = viewport.width > viewport.height ? 'l' : 'p';
+          
+          if (i === 1) {
+            exportDoc = new jsPDF({
+              orientation: orient,
+              unit: 'px',
+              format: [viewport.width, viewport.height]
+            });
+          } else {
+            exportDoc.addPage([viewport.width, viewport.height], orient);
+          }
+          
+          exportDoc.addImage(imgData, 'JPEG', 0, 0, viewport.width, viewport.height, undefined, 'FAST');
+        }
+        
+        // Export file save trigger
+        const finalName = pdfFileName ? pdfFileName.replace('.pdf', '_annotated.pdf') : 'annotated_document.pdf';
+        exportDoc.save(finalName);
+        
+      } catch (err) {
+        console.error('Export error details:', err);
+        alert('Failed generating PDF output: ' + err.message);
+      } finally {
+        overlay.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
