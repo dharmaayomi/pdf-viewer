@@ -10,6 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@embedpdf/core": "^2.14.3",
+    "@embedpdf/engines": "^2.14.3",
+    "@embedpdf/plugin-document-manager": "^2.14.3",
+    "@embedpdf/plugin-render": "^2.14.3",
+    "@embedpdf/plugin-scroll": "^2.14.3",
+    "@embedpdf/plugin-viewport": "^2.14.3",
+    "@embedpdf/react-pdf-viewer": "^2.14.3",
     "@nutrient-sdk/viewer": "^1.15.1",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
